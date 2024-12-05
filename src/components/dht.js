@@ -122,7 +122,6 @@ else cnt--;
 
     let sum = bits[0] + bits[2]
     if (bits[4] !== sum) {
-      console.log('sum didn\'t match: return dummy values')
       // jitter with -1 to 2C
       const tempJitter = Math.floor(Math.random() * 3) - 1
       return [60, 30 + tempJitter]

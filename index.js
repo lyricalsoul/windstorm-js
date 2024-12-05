@@ -100,6 +100,15 @@ const requestAIInfo = async (forecast) => {
     minHumidity: umidade_min
   })
   const r = await waitForAIResponse()
+
+  const { temp, humidity } = r
+  const { display } = components
+  display.clear()
+  display.cursor(0, 0)
+  display.print(`Temp AI: ${temp} C`)
+  display.cursor(1, 0)
+  display.print(`Umid AI: ${humidity} %`)
+  await sleep(10_000)
 }
 
 const printFromSensor = async () => {
@@ -167,7 +176,7 @@ const printMoreStatus = async (forecast, data, period) => {
   await sleep(3000)
 }
 
-const printAlert = async ({ alerta, perigo, tipo }) => {
+const printAlert = async ({ alerta, perigo, tipo }, alertCount) => {
   const { display, workingLED, soundSystem } = components
   console.log(`${perigo} de ${tipo.toLowerCase()}!`)
   broadcastINMETAlert(({ title: tipo, message: alerta, urgency: perigo }))
@@ -176,7 +185,7 @@ const printAlert = async ({ alerta, perigo, tipo }) => {
   console.log(alerta)
   display.clear()
   display.cursor(0, 0)
-  display.print(perigo)
+  display.print(perigo + (alertCount > 0 ? ` +${alertCount}` : ''))
   display.cursor(1, 0)
   display.print(tipo)
   // jump to last line and char at y2
@@ -192,7 +201,9 @@ globalThis.triggerWarning = async () => {
   const alerts = await fetchCurrentAlerts()
   if (!alerts) return errorScreen()
   if (alerts.length > 0) {
-    await Promise.all(alerts.map(alert => printAlert(alert)))
+    for (let i = 0; i < alerts.length; i++) {
+      await printAlert(alerts[i], alerts.length - i)
+    }
   }
 
   return alerts.length

@@ -18,14 +18,11 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7cd1be13-0668-4198-ac34-c2a4393ca841" name="Changes" comment="add idea files">
-      <change afterPath="$PROJECT_DIR$/src/weather-server.js" afterDir="false" />
+    <list default="true" id="7cd1be13-0668-4198-ac34-c2a4393ca841" name="Changes" comment="update: bug fixes and such">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/dht.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/dht.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utilities.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/utilities.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/display.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/display.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -123,7 +120,8 @@
       <workItem from="1733311133153" duration="8472000" />
       <workItem from="1733324394727" duration="13670000" />
       <workItem from="1733374063938" duration="1285000" />
-      <workItem from="1733400749884" duration="403000" />
+      <workItem from="1733400749884" duration="1894000" />
+      <workItem from="1733404611848" duration="6978000" />
     </task>
     <task id="LOCAL-00001" summary="first commit">
       <option name="closed" value="true" />
@@ -141,7 +139,15 @@
       <option name="project" value="LOCAL" />
       <updated>1733319818662</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="update: bug fixes and such">
+      <option name="closed" value="true" />
+      <created>1733404082731</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1733404082731</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -150,6 +156,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="first commit" />
     <MESSAGE value="add idea files" />
-    <option name="LAST_COMMIT_MESSAGE" value="add idea files" />
+    <MESSAGE value="update: bug fixes and such" />
+    <option name="LAST_COMMIT_MESSAGE" value="update: bug fixes and such" />
   </component>
 </project>
