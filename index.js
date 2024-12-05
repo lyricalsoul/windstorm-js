@@ -1,16 +1,18 @@
 import johnny from 'johnny-five'
 import { fetchCurrentAlerts, fetchCurrentWeather } from './src/weather.js'
 import {
+  dayOfYear,
   inmetDate,
   nextDate,
   nextPeriod,
   normalizeTempText,
   normalizeText,
-  sleep,
+  sleep, timeOfDay,
   timePeriod
 } from './src/utilities.js'
 import components from './src/components.js'
 import { scrollingText } from './src/display.js'
+import { broadcastAIRequest, broadcastINMETAlert, waitForAIResponse } from './src/weather-server.js'
 
 const board = new johnny.Board()
 let triggeredGasAlert = false
@@ -51,7 +53,6 @@ const displayGasAlert = async (value) => {
 const setUpGasHooks = () => {
   const { gasSensor } = components
   gasSensor.on('change', async (value) => {
-    console.log(value)
     if (value >= 600) await displayGasAlert(value)
     else {
       components.soundSystem.off()
@@ -81,7 +82,24 @@ const normalRun = async () => {
   if (!forecast) return errorScreen()
   await homeScreen(forecast, count)
   await printFromSensor()
+  await requestAIInfo(forecast)
   return normalRun()
+}
+
+const requestAIInfo = async (forecast) => {
+  let hour = timeOfDay()
+  let day = dayOfYear()
+  let date = inmetDate()
+  const { entidade, uf, temp_max, temp_min, dir_vento, int_vento, umidade_max, umidade_min } = forecast[date]['tarde']
+  broadcastAIRequest({
+    hour: hour + 1,
+    timeOfDay: day,
+    maxTemp: temp_max,
+    minTemp: temp_min,
+    maxHumidity: umidade_max,
+    minHumidity: umidade_min
+  })
+  const r = await waitForAIResponse()
 }
 
 const printFromSensor = async () => {
@@ -152,6 +170,7 @@ const printMoreStatus = async (forecast, data, period) => {
 const printAlert = async ({ alerta, perigo, tipo }) => {
   const { display, workingLED, soundSystem } = components
   console.log(`${perigo} de ${tipo.toLowerCase()}!`)
+  broadcastINMETAlert(({ title: tipo, message: alerta, urgency: perigo }))
   workingLED.blink(1000)
   soundSystem.on()
   console.log(alerta)

@@ -77,6 +77,36 @@ export const delayMicroseconds = us => {
 
 export const digitalReadPin = (board, pin) => {
   return new Promise((res) => {
-    this.board.digitalRead(this.pin, res)
+    pin.read((error, value) => {
+      if (error) {
+        res(-2)
+      } else {
+        res(value)
+      }
+    })
   })
+}
+
+const timeForMicro = process.hrtime()
+const usMicro = timeForMicro[0] * 1000000 + timeForMicro[1] / 1000
+
+// returns the uptime in microseconds
+export const micros = () => {
+  const time = process.hrtime()
+  return time[0] * 1000000 + time[1] / 1000 - usMicro
+}
+
+// gets the time of the day in 24h format (0-24)
+export const timeOfDay = () => {
+  const date = new Date()
+  return date.getHours()
+}
+
+// returns the day of the year (0-366)
+export const dayOfYear = () => {
+  const now = new Date()
+  const start = new Date(now.getFullYear(), 0, 0)
+  const diff = now - start
+  const oneDay = 1000 * 60 * 60 * 24
+  return Math.floor(diff / oneDay)
 }

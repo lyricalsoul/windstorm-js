@@ -19,12 +19,12 @@ export class SystemsComponents {
     })
     this._soundSystem = new johnny.Led(13)
     this._gasSensor = new johnny.Sensor('A2')
-    this._dhtSensor = new DHT(board, 'A2')
+    this._dhtSensor = new DHT(board, 'A1')
   }
 
-  startComponents () {
+  startComponents (...args) {
     this.boardReady = true
-    this.initialize()
+    this.initialize(...args)
   }
 
   get workingLED () {

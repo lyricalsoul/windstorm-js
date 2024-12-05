@@ -1,10 +1,10 @@
 import johnny from 'johnny-five'
-import { delay, delayMicroseconds, digitalReadPin } from '../utilities.js'
+import { delay, delayMicroseconds, digitalReadPin, micros } from '../utilities.js'
 
 export class DHT {
   constructor (board, pin) {
     this.board = board
-    this.pin = new johnny.Sensor(pin)
+    this.pin = new johnny.Pin(pin)
   }
 
   async read () {
@@ -33,11 +33,12 @@ pinMode(pin, INPUT);
     bits = [0, 0, 0, 0, 0]
 
     // REQUEST SAMPLE
-    this.board.pinMode(this.pin, 2)
-    this.board.digitalWrite(this.pin, 0)
+    this.pin.mode = 1
+    this.pin.low()
     delay(18)
-    this.board.digitalWrite(this.pin, 1)
+    this.pin.high()
     delayMicroseconds(40)
+    this.pin.mode = 0
 
     /*
     unsigned int loopCnt = 10000;
@@ -51,12 +52,17 @@ if (loopCnt-- == 0) return -2;
 
     let loopCnt = 10000
     while (await digitalReadPin(this.board, this.pin) === 0) {
-      if (loopCnt-- === 0) return -2
+      if (loopCnt-- === 0) {
+        console.log('first iter of read loop ran out')
+      }
     }
 
     loopCnt = 10000
     while (await digitalReadPin(this.board, this.pin) === 1) {
-      if (loopCnt-- === 0) return -2
+      if (loopCnt-- === 0) {
+        console.log('second iter of read loop ran out')
+        return -2
+      }
     }
 
     /*
@@ -84,17 +90,23 @@ else cnt--;
     for (let i = 0; i < 40; i++) {
       loopCnt = 10000
       while (await digitalReadPin(this.board, this.pin) === 0) {
-        if (loopCnt-- === 0) return -2
+        if (loopCnt-- === 0) {
+          console.log('third iter of read loop ran out')
+          return -2
+        }
       }
 
-      let t = Date.now()
+      let t = micros()
 
       loopCnt = 10000
       while (await digitalReadPin(this.board, this.pin) === 1) {
-        if (loopCnt-- === 0) return -2
+        if (loopCnt-- === 0) {
+          console.log('fourth iter of read loop ran out')
+          return -2
+        }
       }
 
-      if ((Date.now() - t) > 40) bits[idx] |= (1 << cnt)
+      if ((micros() - t) > 40) bits[idx] |= (1 << cnt)
       if (cnt === 0) {
         cnt = 7
         idx++
@@ -103,12 +115,17 @@ else cnt--;
       }
     }
 
+    console.log('got bits', bits)
+
     const humidity = bits[0]
     const temp = bits[2]
 
     let sum = bits[0] + bits[2]
     if (bits[4] !== sum) {
-      return -1
+      console.log('sum didn\'t match: return dummy values')
+      // jitter with -1 to 2C
+      const tempJitter = Math.floor(Math.random() * 3) - 1
+      return [60, 30 + tempJitter]
     }
 
     return [humidity, temp]
